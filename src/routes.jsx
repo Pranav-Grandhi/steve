@@ -1,32 +1,25 @@
-import { Fragment } from "react";
 import { Routes as RouterRoutes, Route } from "react-router-dom";
 
 // Auto generates routes from files under ./pages
 // https://vitejs.dev/guide/features.html#glob-import
-const ROUTES = import.meta.glob("./pages/**/*.jsx", { eager: true });
+const ROUTES = import.meta.glob("./pages/**/[a-z[]*.jsx", { eager: true });
 
 const routes = Object.keys(ROUTES).map((route) => {
-  const name = route.match(/\.\/pages\/(.*)\.jsx$/)[1];
+  const path = route.replace(/\.\/pages|index|\.jsx$/g, "");
+
   return {
-    name,
-    path: name === "index" ? "/" : `/${name.toLowerCase()}`,
-    component: ROUTES[route].default,
+    path,
+    component: ROUTES[route].default(),
   };
 });
 
 export function Routes() {
-  const FourOhFour = routes.find((route) => route.name === "404").component;
-
   return (
     <>
       <RouterRoutes>
-        {routes.map(({ path, component: RouteComp }) => {
-          return <Route key={path} path={path} element={<RouteComp />} />;
+        {routes.map(({ path, component }) => {
+          return <Route key={path} path={path} element={component} />;
         })}
-        <Route
-          path="*"
-          element={FourOhFour()}
-        />
       </RouterRoutes>
     </>
   );
