@@ -1,4 +1,4 @@
-export default function Nested() {
+export default function Routing() {
   return (
     <main>
       <h1>Routing</h1>
