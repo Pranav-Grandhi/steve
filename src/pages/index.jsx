@@ -6,6 +6,9 @@ export default function Index() {
         Get started by editing{" "}
         <code>pages/index.js</code>
       </p>
+      <a href="/routing">
+        Go to routing
+      </a>
     </main>
   );
 }
