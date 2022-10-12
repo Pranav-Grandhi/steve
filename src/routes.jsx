@@ -6,12 +6,15 @@ const PRESERVED = import.meta.globEager("./pages/404.jsx");
 const ROUTES = import.meta.glob("./pages/**/[a-z[]*.jsx");
 
 const preserved = Object.keys(PRESERVED).reduce((preserved, file) => {
-  const key = file.replace(/\.\/pages\/|\.jsx$/g, '')
-  return { ...preserved, [key]: PRESERVED[file].default }
-}, {})
+  const key = file.replace(/\.\/pages\/|\.jsx$/g, "");
+  return { ...preserved, [key]: PRESERVED[file].default };
+}, {});
 
 const routes = Object.keys(ROUTES).map((route) => {
-  const path = route.replace(/\.\/pages|index|\.jsx$/g, "");
+  const path = route
+    .replace(/\.\/pages|index|\.jsx$/g, "")
+    .replace(/\[\.{3}.+\]/, "*")
+    .replace(/\[(.+)\]/, ":$1");
 
   return { path, component: lazy(ROUTES[route]) };
 });
@@ -21,7 +24,7 @@ export function Routes() {
 
   return (
     <>
-      <Suspense fallback={"Loading..."}>
+      <Suspense>
         <RouterRoutes>
           {routes.map(({ path, component: Component }) => {
             return <Route key={path} path={path} element={<Component />} />;
